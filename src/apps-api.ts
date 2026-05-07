@@ -28,6 +28,7 @@ export interface AppSubscription {
   externalResourceId: string;
   externalResourceName: string;
   events: string[];
+  webhookUrl?: string | null;
 }
 
 export interface AppInstallation {
@@ -80,6 +81,13 @@ export interface VercelProject {
   projectUrl?: string | null;
 }
 
+export interface RailwayProject {
+  id: string;
+  name: string;
+  workspaceId: string;
+  workspaceName: string;
+}
+
 export interface InstallUrlResponse {
   installUrl: string;
   state: string;
@@ -101,6 +109,11 @@ export interface CompleteGoogleCalendarInstallRequest {
 }
 
 export interface CompleteVercelInstallRequest {
+  state: string;
+  code: string;
+}
+
+export interface CompleteRailwayInstallRequest {
   state: string;
   code: string;
 }
@@ -134,6 +147,13 @@ export interface SaveVercelSubscriptionsRequest {
   target: string;
 }
 
+export interface SaveRailwaySubscriptionsRequest {
+  installationId: string;
+  channelId: string;
+  projectIds: string[];
+  events: string[];
+}
+
 export interface AppsCatalogResponse {
   apps: AppCatalogItem[];
 }
@@ -156,6 +176,10 @@ export interface GoogleCalendarsResponse {
 
 export interface VercelProjectsResponse {
   projects: VercelProject[];
+}
+
+export interface RailwayProjectsResponse {
+  projects: RailwayProject[];
 }
 
 export interface FlyntlyAppsApi {
@@ -182,6 +206,11 @@ export interface FlyntlyAppsApi {
   listVercelProjects: (input: { token: string; installationId: string }) => Promise<VercelProjectsResponse>;
   saveVercelSubscriptions: (input: { token: string; body: SaveVercelSubscriptionsRequest }) => Promise<AppInstallation>;
   deleteVercelSubscription: (input: { token: string; subscriptionId: string }) => Promise<void>;
+  createRailwayInstallUrl: (token: string) => Promise<InstallUrlResponse>;
+  completeRailwayInstall: (input: { token: string; body: CompleteRailwayInstallRequest }) => Promise<AppInstallation>;
+  listRailwayProjects: (input: { token: string; installationId: string }) => Promise<RailwayProjectsResponse>;
+  saveRailwaySubscriptions: (input: { token: string; body: SaveRailwaySubscriptionsRequest }) => Promise<AppInstallation>;
+  deleteRailwaySubscription: (input: { token: string; subscriptionId: string }) => Promise<void>;
 }
 
 export function createFlyntlyAppsApi(config: FlyntlyAppsApiConfig): FlyntlyAppsApi {
@@ -322,6 +351,37 @@ export function createFlyntlyAppsApi(config: FlyntlyAppsApiConfig): FlyntlyAppsA
         method: 'DELETE',
         token,
         fallbackError: 'Failed to remove Vercel subscription',
+      }),
+    createRailwayInstallUrl: (token) =>
+      requestJson(buildAppsUrl('/apps/railway/install-url'), {
+        method: 'POST',
+        token,
+        fallbackError: 'Failed to start Railway installation',
+      }),
+    completeRailwayInstall: ({ token, body }) =>
+      requestJson(buildAppsUrl('/apps/railway/complete'), {
+        method: 'POST',
+        token,
+        body,
+        fallbackError: 'Failed to finish Railway installation',
+      }),
+    listRailwayProjects: ({ token, installationId }) =>
+      requestJson(buildAppsUrl(`/apps/railway/installations/${installationId}/projects`), {
+        token,
+        fallbackError: 'Failed to load Railway projects',
+      }),
+    saveRailwaySubscriptions: ({ token, body }) =>
+      requestJson(buildAppsUrl('/apps/railway/subscriptions'), {
+        method: 'POST',
+        token,
+        body,
+        fallbackError: 'Failed to save Railway subscriptions',
+      }),
+    deleteRailwaySubscription: ({ token, subscriptionId }) =>
+      requestVoid(buildAppsUrl(`/apps/railway/subscriptions/${subscriptionId}`), {
+        method: 'DELETE',
+        token,
+        fallbackError: 'Failed to remove Railway subscription',
       }),
   };
 }

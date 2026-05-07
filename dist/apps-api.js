@@ -116,6 +116,32 @@ export function createFlyntlyAppsApi(config) {
             token,
             fallbackError: 'Failed to remove Vercel subscription',
         }),
+        createRailwayInstallUrl: (token) => requestJson(buildAppsUrl('/apps/railway/install-url'), {
+            method: 'POST',
+            token,
+            fallbackError: 'Failed to start Railway installation',
+        }),
+        completeRailwayInstall: ({ token, body }) => requestJson(buildAppsUrl('/apps/railway/complete'), {
+            method: 'POST',
+            token,
+            body,
+            fallbackError: 'Failed to finish Railway installation',
+        }),
+        listRailwayProjects: ({ token, installationId }) => requestJson(buildAppsUrl(`/apps/railway/installations/${installationId}/projects`), {
+            token,
+            fallbackError: 'Failed to load Railway projects',
+        }),
+        saveRailwaySubscriptions: ({ token, body }) => requestJson(buildAppsUrl('/apps/railway/subscriptions'), {
+            method: 'POST',
+            token,
+            body,
+            fallbackError: 'Failed to save Railway subscriptions',
+        }),
+        deleteRailwaySubscription: ({ token, subscriptionId }) => requestVoid(buildAppsUrl(`/apps/railway/subscriptions/${subscriptionId}`), {
+            method: 'DELETE',
+            token,
+            fallbackError: 'Failed to remove Railway subscription',
+        }),
     };
 }
 //# sourceMappingURL=apps-api.js.map

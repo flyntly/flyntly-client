@@ -23,6 +23,7 @@ export interface AppSubscription {
     externalResourceId: string;
     externalResourceName: string;
     events: string[];
+    webhookUrl?: string | null;
 }
 export interface AppInstallation {
     id: string;
@@ -69,6 +70,12 @@ export interface VercelProject {
     framework?: string | null;
     projectUrl?: string | null;
 }
+export interface RailwayProject {
+    id: string;
+    name: string;
+    workspaceId: string;
+    workspaceName: string;
+}
 export interface InstallUrlResponse {
     installUrl: string;
     state: string;
@@ -86,6 +93,10 @@ export interface CompleteGoogleCalendarInstallRequest {
     code: string;
 }
 export interface CompleteVercelInstallRequest {
+    state: string;
+    code: string;
+}
+export interface CompleteRailwayInstallRequest {
     state: string;
     code: string;
 }
@@ -114,6 +125,12 @@ export interface SaveVercelSubscriptionsRequest {
     events: string[];
     target: string;
 }
+export interface SaveRailwaySubscriptionsRequest {
+    installationId: string;
+    channelId: string;
+    projectIds: string[];
+    events: string[];
+}
 export interface AppsCatalogResponse {
     apps: AppCatalogItem[];
 }
@@ -131,6 +148,9 @@ export interface GoogleCalendarsResponse {
 }
 export interface VercelProjectsResponse {
     projects: VercelProject[];
+}
+export interface RailwayProjectsResponse {
+    projects: RailwayProject[];
 }
 export interface FlyntlyAppsApi {
     buildAppsUrl: (...args: BuildUrlArg[]) => string;
@@ -201,6 +221,23 @@ export interface FlyntlyAppsApi {
         body: SaveVercelSubscriptionsRequest;
     }) => Promise<AppInstallation>;
     deleteVercelSubscription: (input: {
+        token: string;
+        subscriptionId: string;
+    }) => Promise<void>;
+    createRailwayInstallUrl: (token: string) => Promise<InstallUrlResponse>;
+    completeRailwayInstall: (input: {
+        token: string;
+        body: CompleteRailwayInstallRequest;
+    }) => Promise<AppInstallation>;
+    listRailwayProjects: (input: {
+        token: string;
+        installationId: string;
+    }) => Promise<RailwayProjectsResponse>;
+    saveRailwaySubscriptions: (input: {
+        token: string;
+        body: SaveRailwaySubscriptionsRequest;
+    }) => Promise<AppInstallation>;
+    deleteRailwaySubscription: (input: {
         token: string;
         subscriptionId: string;
     }) => Promise<void>;
