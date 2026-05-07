@@ -398,6 +398,9 @@ export class FlyntlyWebSocketManager {
     onChannelDeleted(callback) {
         return this.callbacks.subscribe('channelDeleted', callback);
     }
+    onChannelMembershipAdded(callback) {
+        return this.callbacks.subscribe('channelMembershipAdded', callback);
+    }
     onWorkspaceAccessRevoked(callback) {
         return this.callbacks.subscribe('workspaceAccessRevoked', callback);
     }

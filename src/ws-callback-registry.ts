@@ -7,6 +7,7 @@ export class WSCallbackRegistry {
     update: new Set(),
     unread: new Set(),
     channelDeleted: new Set(),
+    channelMembershipAdded: new Set(),
     workspaceAccessRevoked: new Set(),
     message: new Set(),
     messageEdit: new Set(),

@@ -98,6 +98,7 @@ export interface WSEventCallbacks {
     update: (channelId: string) => void;
     unread: (channelId: string, count: number, lastMessageSeq?: number) => void;
     channelDeleted: (channelId: string) => void;
+    channelMembershipAdded: (channelId: string, orgId: string) => void;
     workspaceAccessRevoked: (orgId: string, replacementToken: string, replacementOrgId: string | null) => void;
     message: (channelId: string, message: RawMessagePayload) => void;
     messageEdit: (channelId: string, message: RawMessageEditPayload) => void;
@@ -142,6 +143,10 @@ export type ServerMessage = {
 } | {
     type: 'channel-deleted';
     channelId: string;
+} | {
+    type: 'channel-membership-added';
+    channelId: string;
+    orgId: string;
 } | {
     type: 'workspace-access-revoked';
     orgId: string;

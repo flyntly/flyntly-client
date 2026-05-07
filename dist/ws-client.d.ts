@@ -64,6 +64,7 @@ export declare class FlyntlyWebSocketManager {
     onUpdate(callback: (channelId: string) => void): () => void;
     onUnreadUpdate(callback: (channelId: string, count: number, lastMessageSeq?: number) => void): () => void;
     onChannelDeleted(callback: (channelId: string) => void): () => void;
+    onChannelMembershipAdded(callback: (channelId: string, orgId: string) => void): () => void;
     onWorkspaceAccessRevoked(callback: (orgId: string, replacementToken: string, replacementOrgId: string | null) => void): () => void;
     onMessage(callback: (channelId: string, message: RawMessagePayload) => void): () => void;
     onMessageEdit(callback: (channelId: string, message: RawMessageEditPayload) => void): () => void;
