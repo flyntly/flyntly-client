@@ -76,6 +76,16 @@ export interface RailwayProject {
     workspaceId: string;
     workspaceName: string;
 }
+export interface TrelloList {
+    id: string;
+    name: string;
+}
+export interface TrelloBoard {
+    id: string;
+    name: string;
+    webUrl?: string | null;
+    lists: TrelloList[];
+}
 export interface InstallUrlResponse {
     installUrl: string;
     state: string;
@@ -99,6 +109,10 @@ export interface CompleteVercelInstallRequest {
 export interface CompleteRailwayInstallRequest {
     state: string;
     code: string;
+}
+export interface CompleteTrelloInstallRequest {
+    state: string;
+    token: string;
 }
 export interface SaveGitHubSubscriptionsRequest {
     installationId: string;
@@ -131,6 +145,13 @@ export interface SaveRailwaySubscriptionsRequest {
     projectIds: string[];
     events: string[];
 }
+export interface SaveTrelloSubscriptionsRequest {
+    installationId: string;
+    channelId: string;
+    boardId: string;
+    listIds: string[];
+    events: string[];
+}
 export interface AppsCatalogResponse {
     apps: AppCatalogItem[];
 }
@@ -151,6 +172,9 @@ export interface VercelProjectsResponse {
 }
 export interface RailwayProjectsResponse {
     projects: RailwayProject[];
+}
+export interface TrelloBoardsResponse {
+    boards: TrelloBoard[];
 }
 export interface FlyntlyAppsApi {
     buildAppsUrl: (...args: BuildUrlArg[]) => string;
@@ -238,6 +262,23 @@ export interface FlyntlyAppsApi {
         body: SaveRailwaySubscriptionsRequest;
     }) => Promise<AppInstallation>;
     deleteRailwaySubscription: (input: {
+        token: string;
+        subscriptionId: string;
+    }) => Promise<void>;
+    createTrelloInstallUrl: (token: string) => Promise<InstallUrlResponse>;
+    completeTrelloInstall: (input: {
+        token: string;
+        body: CompleteTrelloInstallRequest;
+    }) => Promise<AppInstallation>;
+    listTrelloBoards: (input: {
+        token: string;
+        installationId: string;
+    }) => Promise<TrelloBoardsResponse>;
+    saveTrelloSubscriptions: (input: {
+        token: string;
+        body: SaveTrelloSubscriptionsRequest;
+    }) => Promise<AppInstallation>;
+    deleteTrelloSubscription: (input: {
         token: string;
         subscriptionId: string;
     }) => Promise<void>;

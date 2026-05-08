@@ -142,6 +142,32 @@ export function createFlyntlyAppsApi(config) {
             token,
             fallbackError: 'Failed to remove Railway subscription',
         }),
+        createTrelloInstallUrl: (token) => requestJson(buildAppsUrl('/apps/trello/install-url'), {
+            method: 'POST',
+            token,
+            fallbackError: 'Failed to start Trello installation',
+        }),
+        completeTrelloInstall: ({ token, body }) => requestJson(buildAppsUrl('/apps/trello/complete'), {
+            method: 'POST',
+            token,
+            body,
+            fallbackError: 'Failed to finish Trello installation',
+        }),
+        listTrelloBoards: ({ token, installationId }) => requestJson(buildAppsUrl(`/apps/trello/installations/${installationId}/boards`), {
+            token,
+            fallbackError: 'Failed to load Trello boards',
+        }),
+        saveTrelloSubscriptions: ({ token, body }) => requestJson(buildAppsUrl('/apps/trello/subscriptions'), {
+            method: 'POST',
+            token,
+            body,
+            fallbackError: 'Failed to save Trello subscriptions',
+        }),
+        deleteTrelloSubscription: ({ token, subscriptionId }) => requestVoid(buildAppsUrl(`/apps/trello/subscriptions/${subscriptionId}`), {
+            method: 'DELETE',
+            token,
+            fallbackError: 'Failed to remove Trello subscription',
+        }),
     };
 }
 //# sourceMappingURL=apps-api.js.map
