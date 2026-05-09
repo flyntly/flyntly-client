@@ -44,11 +44,15 @@ export interface SentThreadReplyResponse {
 
 export interface ChannelBootstrapResponse {
   messages: unknown[];
+  latestSeq?: number | null;
+  oldestSeq?: number | null;
+  hasMore?: boolean;
 }
 
 export interface ChannelPaginationResponse {
   messages: unknown[];
   latestSeq?: number | null;
+  oldestSeq?: number | null;
   hasMore?: boolean;
 }
 
@@ -246,7 +250,7 @@ export interface InboxPageRequest {
 export interface FlyntlyChatApi {
   buildChatUrl: (...args: BuildUrlArg[]) => string;
   fetchChannelBootstrap: (input: { channelId: string; token: string }) => Promise<ChannelBootstrapResponse>;
-  fetchOlderChannelMessages: (input: { channelId: string; token: string; beforeTimestamp: string; limit?: number }) => Promise<ChannelPaginationResponse>;
+  fetchOlderChannelMessages: (input: { channelId: string; token: string; beforeSeq: number; limit?: number }) => Promise<ChannelPaginationResponse>;
   fetchChannelMessagesAfterSeq: (input: { channelId: string; token: string; afterSeq: number; limit?: number }) => Promise<ChannelPaginationResponse>;
   listChannels: <TResponse>(token: string) => Promise<TResponse>;
   createChannel: <TResponse>(input: { token: string; body: unknown }) => Promise<TResponse>;
@@ -302,9 +306,9 @@ export function createFlyntlyChatApi(config: FlyntlyChatApiConfig): FlyntlyChatA
         token,
         fallbackError: 'Failed to bootstrap channel',
       }),
-    fetchOlderChannelMessages: ({ channelId, token, beforeTimestamp, limit = 50 }) =>
+    fetchOlderChannelMessages: ({ channelId, token, beforeSeq, limit = 50 }) =>
       requestJson(buildChatUrl(`/channels/${channelId}/messages/paginated`, {
-        query: { before: beforeTimestamp, limit },
+        query: { beforeSeq, limit },
       }), {
         token,
         fallbackError: 'Failed to load older messages',

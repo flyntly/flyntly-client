@@ -38,10 +38,14 @@ export interface SentThreadReplyResponse {
 }
 export interface ChannelBootstrapResponse {
     messages: unknown[];
+    latestSeq?: number | null;
+    oldestSeq?: number | null;
+    hasMore?: boolean;
 }
 export interface ChannelPaginationResponse {
     messages: unknown[];
     latestSeq?: number | null;
+    oldestSeq?: number | null;
     hasMore?: boolean;
 }
 export interface PinRecord {
@@ -219,7 +223,7 @@ export interface FlyntlyChatApi {
     fetchOlderChannelMessages: (input: {
         channelId: string;
         token: string;
-        beforeTimestamp: string;
+        beforeSeq: number;
         limit?: number;
     }) => Promise<ChannelPaginationResponse>;
     fetchChannelMessagesAfterSeq: (input: {
