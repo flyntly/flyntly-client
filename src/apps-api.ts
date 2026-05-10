@@ -23,6 +23,7 @@ export interface AppCatalogItem {
 export interface AppSubscription {
   id: string;
   channelId: string;
+  routeId?: string | null;
   createdBy: string;
   canManage: boolean;
   externalResourceId: string;
@@ -138,6 +139,7 @@ export interface CompleteTrelloInstallRequest {
 export interface SaveGitHubSubscriptionsRequest {
   installationId: string;
   channelId: string;
+  routeId?: string | null;
   repositoryIds: string[];
   events: string[];
 }
@@ -145,6 +147,7 @@ export interface SaveGitHubSubscriptionsRequest {
 export interface SaveGoogleDriveSubscriptionsRequest {
   installationId: string;
   channelId: string;
+  routeId?: string | null;
   resourceKeys: string[];
   events: string[];
 }
@@ -152,6 +155,7 @@ export interface SaveGoogleDriveSubscriptionsRequest {
 export interface SaveGoogleCalendarSubscriptionsRequest {
   installationId: string;
   channelId: string;
+  routeId?: string | null;
   calendarIds: string[];
   events: string[];
 }
@@ -159,6 +163,7 @@ export interface SaveGoogleCalendarSubscriptionsRequest {
 export interface SaveVercelSubscriptionsRequest {
   installationId: string;
   channelId: string;
+  routeId?: string | null;
   projectIds: string[];
   events: string[];
   target: string;
@@ -167,6 +172,7 @@ export interface SaveVercelSubscriptionsRequest {
 export interface SaveRailwaySubscriptionsRequest {
   installationId: string;
   channelId: string;
+  routeId?: string | null;
   projectIds: string[];
   events: string[];
 }
@@ -174,6 +180,7 @@ export interface SaveRailwaySubscriptionsRequest {
 export interface SaveTrelloSubscriptionsRequest {
   installationId: string;
   channelId: string;
+  routeId?: string | null;
   boardId: string;
   listIds: string[];
   events: string[];
@@ -220,31 +227,37 @@ export interface FlyntlyAppsApi {
   listGitHubRepositories: (input: { token: string; installationId: string }) => Promise<GitHubRepositoriesResponse>;
   saveGitHubSubscriptions: (input: { token: string; body: SaveGitHubSubscriptionsRequest }) => Promise<AppInstallation>;
   deleteGitHubSubscription: (input: { token: string; subscriptionId: string }) => Promise<void>;
+  deleteGitHubRoute: (input: { token: string; routeId: string }) => Promise<void>;
   createGoogleDriveInstallUrl: (token: string) => Promise<InstallUrlResponse>;
   completeGoogleDriveInstall: (input: { token: string; body: CompleteGoogleDriveInstallRequest }) => Promise<AppInstallation>;
   listGoogleDriveResources: (input: { token: string; installationId: string }) => Promise<GoogleDriveResourcesResponse>;
   saveGoogleDriveSubscriptions: (input: { token: string; body: SaveGoogleDriveSubscriptionsRequest }) => Promise<AppInstallation>;
   deleteGoogleDriveSubscription: (input: { token: string; subscriptionId: string }) => Promise<void>;
+  deleteGoogleDriveRoute: (input: { token: string; routeId: string }) => Promise<void>;
   createGoogleCalendarInstallUrl: (token: string) => Promise<InstallUrlResponse>;
   completeGoogleCalendarInstall: (input: { token: string; body: CompleteGoogleCalendarInstallRequest }) => Promise<AppInstallation>;
   listGoogleCalendars: (input: { token: string; installationId: string }) => Promise<GoogleCalendarsResponse>;
   saveGoogleCalendarSubscriptions: (input: { token: string; body: SaveGoogleCalendarSubscriptionsRequest }) => Promise<AppInstallation>;
   deleteGoogleCalendarSubscription: (input: { token: string; subscriptionId: string }) => Promise<void>;
+  deleteGoogleCalendarRoute: (input: { token: string; routeId: string }) => Promise<void>;
   createVercelInstallUrl: (token: string) => Promise<InstallUrlResponse>;
   completeVercelInstall: (input: { token: string; body: CompleteVercelInstallRequest }) => Promise<AppInstallation>;
   listVercelProjects: (input: { token: string; installationId: string }) => Promise<VercelProjectsResponse>;
   saveVercelSubscriptions: (input: { token: string; body: SaveVercelSubscriptionsRequest }) => Promise<AppInstallation>;
   deleteVercelSubscription: (input: { token: string; subscriptionId: string }) => Promise<void>;
+  deleteVercelRoute: (input: { token: string; routeId: string }) => Promise<void>;
   createRailwayInstallUrl: (token: string) => Promise<InstallUrlResponse>;
   completeRailwayInstall: (input: { token: string; body: CompleteRailwayInstallRequest }) => Promise<AppInstallation>;
   listRailwayProjects: (input: { token: string; installationId: string }) => Promise<RailwayProjectsResponse>;
   saveRailwaySubscriptions: (input: { token: string; body: SaveRailwaySubscriptionsRequest }) => Promise<AppInstallation>;
   deleteRailwaySubscription: (input: { token: string; subscriptionId: string }) => Promise<void>;
+  deleteRailwayRoute: (input: { token: string; routeId: string }) => Promise<void>;
   createTrelloInstallUrl: (token: string) => Promise<InstallUrlResponse>;
   completeTrelloInstall: (input: { token: string; body: CompleteTrelloInstallRequest }) => Promise<AppInstallation>;
   listTrelloBoards: (input: { token: string; installationId: string }) => Promise<TrelloBoardsResponse>;
   saveTrelloSubscriptions: (input: { token: string; body: SaveTrelloSubscriptionsRequest }) => Promise<AppInstallation>;
   deleteTrelloSubscription: (input: { token: string; subscriptionId: string }) => Promise<void>;
+  deleteTrelloRoute: (input: { token: string; routeId: string }) => Promise<void>;
 }
 
 export function createFlyntlyAppsApi(config: FlyntlyAppsApiConfig): FlyntlyAppsApi {
@@ -293,6 +306,12 @@ export function createFlyntlyAppsApi(config: FlyntlyAppsApiConfig): FlyntlyAppsA
         token,
         fallbackError: 'Failed to remove GitHub subscription',
       }),
+    deleteGitHubRoute: ({ token, routeId }) =>
+      requestVoid(buildAppsUrl(`/apps/github/routes/${routeId}`), {
+        method: 'DELETE',
+        token,
+        fallbackError: 'Failed to remove GitHub route',
+      }),
     createGoogleDriveInstallUrl: (token) =>
       requestJson(buildAppsUrl('/apps/google-drive/install-url'), {
         method: 'POST',
@@ -323,6 +342,12 @@ export function createFlyntlyAppsApi(config: FlyntlyAppsApiConfig): FlyntlyAppsA
         method: 'DELETE',
         token,
         fallbackError: 'Failed to remove Google Drive subscription',
+      }),
+    deleteGoogleDriveRoute: ({ token, routeId }) =>
+      requestVoid(buildAppsUrl(`/apps/google-drive/routes/${routeId}`), {
+        method: 'DELETE',
+        token,
+        fallbackError: 'Failed to remove Google Drive route',
       }),
     createGoogleCalendarInstallUrl: (token) =>
       requestJson(buildAppsUrl('/apps/google-calendar/install-url'), {
@@ -355,6 +380,12 @@ export function createFlyntlyAppsApi(config: FlyntlyAppsApiConfig): FlyntlyAppsA
         token,
         fallbackError: 'Failed to remove Google Calendar subscription',
       }),
+    deleteGoogleCalendarRoute: ({ token, routeId }) =>
+      requestVoid(buildAppsUrl(`/apps/google-calendar/routes/${routeId}`), {
+        method: 'DELETE',
+        token,
+        fallbackError: 'Failed to remove Google Calendar route',
+      }),
     createVercelInstallUrl: (token) =>
       requestJson(buildAppsUrl('/apps/vercel/install-url'), {
         method: 'POST',
@@ -385,6 +416,12 @@ export function createFlyntlyAppsApi(config: FlyntlyAppsApiConfig): FlyntlyAppsA
         method: 'DELETE',
         token,
         fallbackError: 'Failed to remove Vercel subscription',
+      }),
+    deleteVercelRoute: ({ token, routeId }) =>
+      requestVoid(buildAppsUrl(`/apps/vercel/routes/${routeId}`), {
+        method: 'DELETE',
+        token,
+        fallbackError: 'Failed to remove Vercel route',
       }),
     createRailwayInstallUrl: (token) =>
       requestJson(buildAppsUrl('/apps/railway/install-url'), {
@@ -417,6 +454,12 @@ export function createFlyntlyAppsApi(config: FlyntlyAppsApiConfig): FlyntlyAppsA
         token,
         fallbackError: 'Failed to remove Railway subscription',
       }),
+    deleteRailwayRoute: ({ token, routeId }) =>
+      requestVoid(buildAppsUrl(`/apps/railway/routes/${routeId}`), {
+        method: 'DELETE',
+        token,
+        fallbackError: 'Failed to remove Railway route',
+      }),
     createTrelloInstallUrl: (token) =>
       requestJson(buildAppsUrl('/apps/trello/install-url'), {
         method: 'POST',
@@ -447,6 +490,12 @@ export function createFlyntlyAppsApi(config: FlyntlyAppsApiConfig): FlyntlyAppsA
         method: 'DELETE',
         token,
         fallbackError: 'Failed to remove Trello subscription',
+      }),
+    deleteTrelloRoute: ({ token, routeId }) =>
+      requestVoid(buildAppsUrl(`/apps/trello/routes/${routeId}`), {
+        method: 'DELETE',
+        token,
+        fallbackError: 'Failed to remove Trello route',
       }),
   };
 }

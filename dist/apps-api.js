@@ -38,6 +38,11 @@ export function createFlyntlyAppsApi(config) {
             token,
             fallbackError: 'Failed to remove GitHub subscription',
         }),
+        deleteGitHubRoute: ({ token, routeId }) => requestVoid(buildAppsUrl(`/apps/github/routes/${routeId}`), {
+            method: 'DELETE',
+            token,
+            fallbackError: 'Failed to remove GitHub route',
+        }),
         createGoogleDriveInstallUrl: (token) => requestJson(buildAppsUrl('/apps/google-drive/install-url'), {
             method: 'POST',
             token,
@@ -63,6 +68,11 @@ export function createFlyntlyAppsApi(config) {
             method: 'DELETE',
             token,
             fallbackError: 'Failed to remove Google Drive subscription',
+        }),
+        deleteGoogleDriveRoute: ({ token, routeId }) => requestVoid(buildAppsUrl(`/apps/google-drive/routes/${routeId}`), {
+            method: 'DELETE',
+            token,
+            fallbackError: 'Failed to remove Google Drive route',
         }),
         createGoogleCalendarInstallUrl: (token) => requestJson(buildAppsUrl('/apps/google-calendar/install-url'), {
             method: 'POST',
@@ -90,6 +100,11 @@ export function createFlyntlyAppsApi(config) {
             token,
             fallbackError: 'Failed to remove Google Calendar subscription',
         }),
+        deleteGoogleCalendarRoute: ({ token, routeId }) => requestVoid(buildAppsUrl(`/apps/google-calendar/routes/${routeId}`), {
+            method: 'DELETE',
+            token,
+            fallbackError: 'Failed to remove Google Calendar route',
+        }),
         createVercelInstallUrl: (token) => requestJson(buildAppsUrl('/apps/vercel/install-url'), {
             method: 'POST',
             token,
@@ -115,6 +130,11 @@ export function createFlyntlyAppsApi(config) {
             method: 'DELETE',
             token,
             fallbackError: 'Failed to remove Vercel subscription',
+        }),
+        deleteVercelRoute: ({ token, routeId }) => requestVoid(buildAppsUrl(`/apps/vercel/routes/${routeId}`), {
+            method: 'DELETE',
+            token,
+            fallbackError: 'Failed to remove Vercel route',
         }),
         createRailwayInstallUrl: (token) => requestJson(buildAppsUrl('/apps/railway/install-url'), {
             method: 'POST',
@@ -142,6 +162,11 @@ export function createFlyntlyAppsApi(config) {
             token,
             fallbackError: 'Failed to remove Railway subscription',
         }),
+        deleteRailwayRoute: ({ token, routeId }) => requestVoid(buildAppsUrl(`/apps/railway/routes/${routeId}`), {
+            method: 'DELETE',
+            token,
+            fallbackError: 'Failed to remove Railway route',
+        }),
         createTrelloInstallUrl: (token) => requestJson(buildAppsUrl('/apps/trello/install-url'), {
             method: 'POST',
             token,
@@ -167,6 +192,11 @@ export function createFlyntlyAppsApi(config) {
             method: 'DELETE',
             token,
             fallbackError: 'Failed to remove Trello subscription',
+        }),
+        deleteTrelloRoute: ({ token, routeId }) => requestVoid(buildAppsUrl(`/apps/trello/routes/${routeId}`), {
+            method: 'DELETE',
+            token,
+            fallbackError: 'Failed to remove Trello route',
         }),
     };
 }
