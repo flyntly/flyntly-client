@@ -8,8 +8,8 @@ export function createFlyntlyChatApi(config) {
             token,
             fallbackError: 'Failed to bootstrap channel',
         }),
-        fetchOlderChannelMessages: ({ channelId, token, beforeSeq, limit = 50 }) => requestJson(buildChatUrl(`/channels/${channelId}/messages/paginated`, {
-            query: { beforeSeq, limit },
+        fetchOlderChannelMessages: ({ channelId, token, beforeSeq, beforeId, limit = 50 }) => requestJson(buildChatUrl(`/channels/${channelId}/messages/paginated`, {
+            query: { ...(beforeId != null ? { beforeId } : { beforeSeq }), limit },
         }), {
             token,
             fallbackError: 'Failed to load older messages',

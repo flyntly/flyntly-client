@@ -5,7 +5,8 @@ export interface FlyntlyChatApiConfig {
 }
 export interface SentMessageResponse {
     message: {
-        id: string;
+        /** BIGINT message id post-Vitess (JSON number <= 2^53-1); uuid string on legacy servers. */
+        id: number | string;
         channel_id: string;
         user_id: string;
         text: string;
@@ -223,7 +224,8 @@ export interface FlyntlyChatApi {
     fetchOlderChannelMessages: (input: {
         channelId: string;
         token: string;
-        beforeSeq: number;
+        beforeSeq?: number;
+        beforeId?: number;
         limit?: number;
     }) => Promise<ChannelPaginationResponse>;
     fetchChannelMessagesAfterSeq: (input: {

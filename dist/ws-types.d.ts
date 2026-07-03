@@ -4,7 +4,7 @@ export interface RawReactionPayload {
     userIds?: string[];
 }
 export interface RawMessagePayload {
-    id: string;
+    id: number | string;
     user_id: string;
     text: string;
     timestamp: number | string;
