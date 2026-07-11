@@ -101,6 +101,17 @@ export interface RawCallPayload {
 
 export type RawCallRingingStoppedReason = 'answered' | 'declined' | 'ended' | 'missed' | string;
 
+export interface RawNotificationPayload {
+  kind: string;
+  title: string;
+  body: string;
+  channelId: string | null;
+  messageId: string | null;
+  threadId: string | null;
+  actorUserId: string | null;
+  occurredAt: number;
+}
+
 export interface WSMessageQueueItem {
   channelId: string;
   update: string;
@@ -200,5 +211,6 @@ export type ServerMessage =
       callId: string;
       reason: RawCallRingingStoppedReason;
     }
+  | ({ type: 'notification' } & RawNotificationPayload)
   | { type: 'joined'; channelId?: string }
   | { type: 'error'; error: string };
